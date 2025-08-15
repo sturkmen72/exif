@@ -56,19 +56,6 @@
 #endif
 
 
-#if defined(__BYTE_ORDER) && __BYTE_ORDER == __BIG_ENDIAN || \
-    defined(__BIG_ENDIAN__) || defined(__ARMEB__) || defined(__THUMBEB__) || \
-    defined(__AARCH64EB__) || defined(_MIBSEB) || defined(__MIBSEB) || \
-    defined(__MIBSEB__)
-#error "Big endian architecture unsupported"
-#elif defined(__BYTE_ORDER) && __BYTE_ORDER == __LITTLE_ENDIAN || \
-    defined(__LITTLE_ENDIAN__) || defined(__ARMEL__) || \
-    defined(__THUMBEL__) || defined(__AARCH64EL__) || defined(_MIPSEL) || \
-    defined(__MIPSEL) || defined(__MIPSEL__)
-#else
-#error "Unknown endian architecture!"
-#endif
-
 #define ENTRY_SIZE  12
 #define EXIF_START  6
 #define JPEG_SOI    0xFFD8
@@ -258,7 +245,7 @@ namespace exif {
     struct TagInfo {
         uint16_t tag;           ///< Tag ID
         uint16_t format;        ///< Tag format type
-        u_int8_t directory;     ///< Directory type
+        uint8_t directory;     ///< Directory type
         uint32_t length;        ///< Typical length of tag or 0 if variable
         std::string name;       ///< Name of tag used for output
         std::string desc;       ///< Additional description of Tag, used for output
@@ -273,7 +260,7 @@ namespace exif {
          * @param desc_         ///< Additional description of Tag, used for output
          * @return TagInfo data
          */
-        TagInfo (uint16_t tag_, uint16_t format_, u_int8_t directory_, uint32_t length_, std::string name_, std::string desc_) {
+        TagInfo (uint16_t tag_, uint16_t format_, uint8_t directory_, uint32_t length_, std::string name_, std::string desc_) {
             tag = tag_;
             format = format_;
             directory = directory_;
