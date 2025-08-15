@@ -37,7 +37,7 @@ jobs:
       run: |
         docker run --rm --platform=linux/ppc64 \
           -v $PWD:/src -w /src \
-          ubuntu:22.04 bash -c "
+          ppc64/debian:bullseye bash -c "
             apt-get update &&
             apt-get install -y cmake g++ pkg-config &&
             cmake -B build-be -S . &&
