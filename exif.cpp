@@ -824,8 +824,8 @@ int write_buffer_4(unsigned char *buf, uint32_t val) {
  * @param dataOffset    Offset of data buffer from EXIF buffer
  * @return  Either the actual value of the entry or the address where the value is stored
  */
-u_int32_t get_val(exif::IFEntry entry, unsigned char *buf, u_int32_t *dataOffset) {
-    u_int32_t dataAddr = *dataOffset - EXIF_START;
+uint32_t get_val(exif::IFEntry entry, unsigned char *buf, uint32_t *dataOffset) {
+    uint32_t dataAddr = *dataOffset - EXIF_START;
     //LOGD("Entry %x format %d length %d",entry.tag(),entry.format(),entry.length());
     unsigned char *dataBuf = &buf[*dataOffset];
     int offset = 0;
@@ -850,7 +850,7 @@ u_int32_t get_val(exif::IFEntry entry, unsigned char *buf, u_int32_t *dataOffset
                 }
                 *dataOffset += entry.length();
             } else {
-                return (u_int32_t ) entry.val_string()[0] << 24 |
+                return (uint32_t ) entry.val_string()[0] << 24 |
                                     entry.val_string()[1] << 16 |
                                     entry.val_string()[2] << 8 |
                                     entry.val_string()[3];
@@ -886,8 +886,8 @@ u_int32_t get_val(exif::IFEntry entry, unsigned char *buf, u_int32_t *dataOffset
             break;
         case ENTRY_FORMAT_SRATIONAL:
             for (unsigned long i=0; i<entry.val_srational().size(); i++) {
-                offset += write_buffer_4(&dataBuf[offset], (u_int32_t) entry.val_srational().at(i).numerator);
-                offset += write_buffer_4(&dataBuf[offset], (u_int32_t) entry.val_srational().at(i).denominator);
+                offset += write_buffer_4(&dataBuf[offset], (uint32_t) entry.val_srational().at(i).numerator);
+                offset += write_buffer_4(&dataBuf[offset], (uint32_t) entry.val_srational().at(i).denominator);
             }
             *dataOffset += offset;
             break;
@@ -910,12 +910,12 @@ u_int32_t get_val(exif::IFEntry entry, unsigned char *buf, u_int32_t *dataOffset
  * @param entry         Entry to write
  * @param dataOffset    Offset for data buffer to write values
  */
-void write_entry(unsigned char *buf, u_int32_t entry_offset, exif::IFEntry entry, u_int32_t *dataOffset) {
+void write_entry(unsigned char *buf, uint32_t entry_offset, exif::IFEntry entry, uint32_t *dataOffset) {
     unsigned char *entryBuf = &buf[entry_offset];
     write_buffer_2(entryBuf, entry.tag());
     write_buffer_2(&entryBuf[2], entry.format());
     write_buffer_4(&entryBuf[4], entry.length());
-    u_int32_t val = get_val(entry, buf, dataOffset);
+    uint32_t val = get_val(entry, buf, dataOffset);
     write_buffer_4(&entryBuf[8], val);
     //LOGD("Writing entry %x format %d length %d val %x",entry.tag(),entry.format(),entry.length(),val);
 }
@@ -930,11 +930,11 @@ void write_entry(unsigned char *buf, u_int32_t entry_offset, exif::IFEntry entry
  */
 unsigned long write_ifd_entries(std::vector<exif::IFEntry> *entries, unsigned char *buf, unsigned long offset, unsigned long *link_offset) {
     offset += write_buffer_2(&buf[offset], (uint16_t) entries->size());
-    u_int32_t dataOffset = (u_int32_t) (offset + entries->size() * ENTRY_SIZE + 4); // End of fixed section.  4 bytes for next IFD
+    uint32_t dataOffset = (uint32_t) (offset + entries->size() * ENTRY_SIZE + 4); // End of fixed section.  4 bytes for next IFD
 
     for (unsigned long i = 0; i < entries->size(); i++) {
         exif::IFEntry entry = entries->at(i);
-        write_entry(buf, (u_int32_t) offset, entry, &dataOffset);
+        write_entry(buf, (uint32_t) offset, entry, &dataOffset);
         offset += ENTRY_SIZE;
     }
     *link_offset = offset;
@@ -1073,11 +1073,11 @@ uint16_t exif::EXIFInfo::encodeEXIFsegment(unsigned char *buf) {
     }
 
     // Place first ifd after the final ifd data
-    write_buffer_4(&buf[first_ifd_offset], (u_int32_t) end_ifd - EXIF_START);
+    write_buffer_4(&buf[first_ifd_offset], (uint32_t) end_ifd - EXIF_START);
     unsigned long end_ifd0 = write_ifd_entries(IFD0->entries, buf, end_ifd, &link_offset);
     if (IFD1 ->entries->size() > 0) {
         write_buffer_4(&buf[link_offset],
-                       (u_int32_t) ifd1_offset - EXIF_START); // Link IFD1 if we have that directory
+                       (uint32_t) ifd1_offset - EXIF_START); // Link IFD1 if we have that directory
         LOGD("Added link to IFD1 at %x", (unsigned int) ifd1_offset - EXIF_START);
     }
     // Now that we are done writing the encoded buffer, remove all of the temporary offset entries
