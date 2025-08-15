@@ -1,0 +1,23 @@
+name: Build & Test on BigEndian
+
+on: [push, pull_request]
+
+jobs:
+  bigendian:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user qemu-user-static g++ cmake pkg-config libexif-dev
+
+      - name: Build & Run on PowerPC BigEndian
+        run: |
+          # Build for big-endian PowerPC
+          mkdir build && cd build
+          cmake -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=ppc64 ..
+          make
+          # Run inside QEMU big-endian emulator
+          qemu-ppc64 ./test-exif ./test-images/1.jpg
