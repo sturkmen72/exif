@@ -13,8 +13,6 @@ int main(int argc, char *argv[]) {
 
   std::string output = exifInfo->toString();
   printf("%s",output.c_str());
-  
-  std::string newOutput = std::string("test.jpg");
 
   return 0;
 }
