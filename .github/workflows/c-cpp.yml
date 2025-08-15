@@ -21,3 +21,8 @@ jobs:
     - name: Run executable
       run: ./build/test-exif ./test-images/sony-alpha-6000.jpg
 
+    - name: 20151204_224123.jpg
+      run: ./build/test-exif ./test-images/20151204_224123.jpg
+
+    - name: 20240616_100257.jpg
+      run: ./build/test-exif ./test-images/20240616_100257.jpg
