@@ -37,9 +37,8 @@ jobs:
         cmake -B build-be -S . \
           -DCMAKE_C_COMPILER=powerpc64-linux-gnu-gcc \
           -DCMAKE_CXX_COMPILER=powerpc64-linux-gnu-g++ \
-          -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
-          -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
-          -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_EXE_LINKER_FLAGS="-static"
         cmake --build build-be --config Release
 
     - name: Run PPC64 (Big Endian) binary under QEMU
