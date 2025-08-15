@@ -1,23 +1,46 @@
-name: Build & Test on BigEndian
+name: Build & Test on LE and BE
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
 
 jobs:
-  bigendian:
+  build-test:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+    - name: Checkout source
+      uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y qemu-user qemu-user-static g++ cmake pkg-config libexif-dev
+    # ---------- Little Endian (native amd64) ----------
+    - name: Install deps for native build
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake g++ pkg-config
 
-      - name: Build & Run on PowerPC BigEndian
-        run: |
-          # Build for big-endian PowerPC
-          mkdir build && cd build
-          cmake -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=ppc64 ..
-          make
-          # Run inside QEMU big-endian emulator
-          qemu-ppc64 ./test-exif ./test-images/1.jpg
+    - name: Build native (Little Endian)
+      run: |
+        cmake -B build-le -S .
+        cmake --build build-le --config Release
+
+    - name: Run native (Little Endian)
+      run: ./build-le/test-exif ./test-images/1.jpg
+
+    # ---------- Big Endian (ppc64 via cross compile + QEMU) ----------
+    - name: Install cross compiler & QEMU
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y g++-powerpc64-linux-gnu qemu-user pkg-config
+
+    - name: Cross compile for PPC64 (Big Endian)
+      run: |
+        cmake -B build-be -S . \
+          -DCMAKE_C_COMPILER=powerpc64-linux-gnu-gcc \
+          -DCMAKE_CXX_COMPILER=powerpc64-linux-gnu-g++ \
+          -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
+          -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
+          -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY
+        cmake --build build-be --config Release
+
+    - name: Run on QEMU (Big Endian)
+      run: qemu-ppc64 ./build-be/test-exif ./test-images/1.jpg
