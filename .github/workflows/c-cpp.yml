@@ -18,11 +18,44 @@ jobs:
     - name: Build
       run: cmake --build build --config Release
 
-    - name: Run executable
-      run: ./build/test-exif ./test-images/sony-alpha-6000.jpg
+    - name: 1.jpg
+      run: ./build/test-exif ./test-images/1.jpg
+
+    - name: 2.jpg
+      run: ./build/test-exif ./test-images/2.jpg
 
     - name: 20151204_224123.jpg
       run: ./build/test-exif ./test-images/20151204_224123.jpg
+ 
+    - name: 20200520_162628.jpg
+      run: ./build/test-exif ./test-images/20200520_162628.jpg
+
+    - name: 20200520_170055.jpg
+      run: ./build/test-exif ./test-images/20200520_170055.jpg
 
     - name: 20240616_100257.jpg
       run: ./build/test-exif ./test-images/20240616_100257.jpg
+ 
+    - name: sony-alpha-6000.jpg
+      run: ./build/test-exif ./test-images/sony-alpha-6000.jpg
+
+    - name: test1.jpg
+      run: ./build/test-exif ./test-images/test1.jpg
+
+    - name: test2.jpg
+      run: ./build/test-exif ./test-images/test2.jpg
+
+    - name: test3.jpg
+      run: ./build/test-exif ./test-images/test1.jpg
+
+    - name: test4.jpg
+      run: ./build/test-exif ./test-images/test4.jpg
+
+    - name: tetons.jpg
+      run: ./build/test-exif ./test-images/tetons.jpg
+
+    - name: with_exif_small.jpg
+      run: ./build/test-exif ./test-images/with_exif_small.jpg
+
+    - name: xmp-exif.jpg
+      run: ./build/test-exif ./test-images/xmp-exif.jpg
