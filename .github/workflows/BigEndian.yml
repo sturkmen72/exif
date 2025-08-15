@@ -16,7 +16,7 @@ jobs:
     - name: Install deps for native build
       run: |
         sudo apt-get update
-        sudo apt-get install -y cmake g++ pkg-config libexif-dev libopencv-dev
+        sudo apt-get install -y cmake g++ pkg-config
 
     - name: Build native (Little Endian)
       run: |
@@ -27,10 +27,11 @@ jobs:
       run: ./build-le/test-exif ./test-images/1.jpg
 
     # ---------- Big Endian (ppc64 in Docker + QEMU) ----------
-    - name: Install Docker (for BE container)
+    - name: Enable QEMU for multi-arch Docker
       run: |
         sudo apt-get update
-        sudo apt-get install -y docker.io qemu-user-static
+        sudo apt-get install -y qemu-user-static
+        docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
     - name: Build & Run inside PPC64 container (Big Endian)
       run: |
@@ -38,7 +39,6 @@ jobs:
           -v $PWD:/src -w /src \
           ubuntu:22.04 bash -c "
             apt-get update &&
-            apt-get install -y cmake g++ pkg-config libexif-dev libopencv-dev &&
             cmake -B build-be -S . &&
             cmake --build build-be --config Release &&
             ./build-be/test-exif ./test-images/1.jpg
