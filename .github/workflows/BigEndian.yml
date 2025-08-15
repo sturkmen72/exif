@@ -39,6 +39,7 @@ jobs:
           -v $PWD:/src -w /src \
           ubuntu:22.04 bash -c "
             apt-get update &&
+            apt-get install -y cmake g++ pkg-config &&
             cmake -B build-be -S . &&
             cmake --build build-be --config Release &&
             ./build-be/test-exif ./test-images/1.jpg
