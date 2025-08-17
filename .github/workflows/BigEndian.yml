@@ -24,7 +24,7 @@ jobs:
         cmake --build build-le --config Release
 
     - name: Run native (Little Endian)
-      run: ./build-le/test-exif ./test-images/1.jpg
+      run: ./build-le/test-exif ./test-images/board.jpg
 
     # ---------- Big Endian (ppc64 cross-compile + QEMU) ----------
     - name: Install PPC64 cross-compiler & QEMU
@@ -42,4 +42,4 @@ jobs:
         cmake --build build-be --config Release
 
     - name: Run PPC64 (Big Endian) binary under QEMU
-      run: qemu-ppc64 ./build-be/test-exif ./test-images/1.jpg
+      run: qemu-ppc64 ./build-be/test-exif ./test-images/board.jpg
