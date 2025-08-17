@@ -39,6 +39,9 @@ jobs:
     - name: sony-alpha-6000.jpg
       run: ./build/test-exif ./test-images/sony-alpha-6000.jpg
 
+    - name: board.jpg
+      run: ./build/test-exif ./test-images/board.jpg
+
     - name: test1.jpg
       run: ./build/test-exif ./test-images/test1.jpg
 
